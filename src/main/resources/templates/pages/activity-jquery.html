@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<button	onclick="doget()" >get()</button>
+		<button	onclick="doGetJSON()" >getJSON()</button>		
+		<button	onclick="dopost()" >post()</button>	
+		<button	onclick="doajax()" >ajax()</button>	
+	</div>
+	<script type="text/javascript" src="/ajaxJs/jquery.min.js"></script>
+	<script type="text/javascript">
+		function doget(){
+			var url="doFindActivitys"
+			var params="";
+			$.get(url,params,function(result){
+	    		console.log(result);
+	    	},"text")			
+		}
+		function doGetJSON(){
+			var url="doFindActivitys";
+			var params="";
+			$.getJSON(url,params,function(result){console.log(result);})
+		}
+		function dopost(){
+			var url="doSaveActivity";
+			var params="title=titleOb&category=categoryObj&startTime=2020/02/12 15:30:10&endTime=2020/02/12 15:30:10";
+			console.log(params);
+			$.post(url,params,function(result){
+				alert(result);
+				});			
+		}
+		function doAjax(){
+			var url="doFindActivitys";
+			var params="";
+			$.ajax({
+				"type":"POST",  //默认get 
+				"url":url,       
+				"data":params,  
+				"datatype":"JSON", //期望服务器端返回数据的类型
+				"success":function(result){
+					console.log(result);
+				}
+			});
+		function load(){
+			var url="doFindActivitys";
+			$().load()
+		}	
+		}
+		
+	</script>
+	
+	
+	
+</body>
+</html>

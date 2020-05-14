@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+<style type="text/css">
+ul li {list-style-type: none}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>This is The Activity Page</h1>
+
+<form >
+  <div class="form-group">
+    <label for="title">title</label>
+    <input type="hidden" name="id" th:value="${ac!=null?ac.id:''}">
+    <input type="text" class="form-control" id="titleId" name="title" placeholder="title" th:value="${ac!=null?ac.title:''}">
+  </div>
+  <div class="form-group">
+    <label for="categoryId">category</label>
+    <input type="text" class="form-control" id="categoryId" name="category" placeholder="category" th:value="${ac!=null?ac.category:''}">
+  </div>
+  <div class="form-group">
+    <label for="startTimeId">startTime</label>
+    <input type="text" class="form-control" id="startTimeId" name="startTime"  placeholder="please input startTime" th:value="${ac!=null?ac.startTime:''}">
+  </div>
+  <div class="form-group">
+    <label for="endTimeId">endTime</label>
+    <input type="text" class="form-control" id="endTimeId" name="endTime"  placeholder="please input endtime" th:value="${ac!=null?ac.endTime:''}">
+  </div>
+  <button type="button" class="btn btn-default" onclick="dosaveActivity()">Submit</button>
+  </form>
+  <table class="table table-bordered">
+     <thead>
+        <tr>
+          <th>id</th>
+          <th>title</th>
+          <th>category</th>
+          <th>startTime</th>
+          <th>endTime</th>
+          <th>opr</th>
+        </tr>
+     </thead>
+     <tbody id="tbodyId">
+     	<tr><td colspan="6">数据正在加载....</td></tr>
+     </tbody>
+  </table>
+</div>
+<script type="text/javascript" src="/ajaxJs/jquery.min.js"></script>
+<script type="text/javascript">
+
+//doAjaxGet();
+function doGetActivity(){
+	var url="doFindActivitys";
+	var param="";
+	$.getJSON(url,param,function(result){
+		doHandleQueryResult(result);
+	//	var jason=JSON.parse(result);
+	//	console.log(jason);
+	})
+	}
+//doGetActivity();
+ function doHandleQueryResult(result){
+	 	var tBody=$("#tbodyId");
+ 	    //将jsonObj呈现在页面上
+ 	   tBody.empty();
+ 	    for(var i=0;i<result.length;i++){//循环一次构建一行
+ 	    	var tr=`<tr>
+ 	    	      <td>${result[i].id}</td>
+ 	    	      <td>${result[i].title}</td>
+ 	    	      <td>${result[i].category}</td>
+ 	    	      <td>${result[i].startTime}</td>
+ 	    	      <td>${result[i].endTime}</td>
+ 	    	      <td><a onclick=dodeleteById(${result[i].id})>delete</a></td>
+ 	    	     </tr>`;
+ 	    	     tBody.append(tr);
+ 	    }
+     }
+ function dodeleteById(id){
+	 var url="dodeleteById";
+	 var param="id="+id;
+	 $.post(url,param,function(result){
+		 alert(result);
+		 doGetActivity();
+	 });
+ }
+ function dosaveActivity(){
+	//  alert("result");
+ 	// debugger	
+	 var titleObj=$("#titleId").val();	 
+	 var categoryObj=$("#categoryId").val();
+	 var startTimeObj=$("#startTimeId").val();
+	 var endTimeObj=$("#endTimeId").val();
+	// var params="title="+titleObj+"&category="+categoryObj+"&startTime="+startTimeObj+"&endTime="+endTimeObj;
+	var params=`title=${titleObj}&category=${categoryObj}&startTime=${startTimeObj}&endTime=${endTimeObj}`;
+	 var url="doSaveActivity";
+	 
+	 //data:JSON.stringify(params);
+	 
+	 $.post(url,params,function(result){ alert(result);  doGetActivity(); doClear();});
+ }
+ function doClear(){
+	/* var titleObj=document.getElementById("titleId").value="";	 
+	 var categoryObj=document.getElementById("categoryId").value="";
+	 var startTimeObj=document.getElementById("startTimeId").value="";
+	 var endTimeObj=document.getElementById("endTimeId").value="";*/
+	 
+	 document.querySelectorAll(".form-control").foreach((item)=>item.value="");
+ }
+ doGetActivity();
+</script>
+
+</body>
+</html>
